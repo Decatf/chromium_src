@@ -1,0 +1,69 @@
+From 870a348701d6fcedce4dcded73f388f8a7a76586 Mon Sep 17 00:00:00 2001
+From: ryang <decatf@gmail.com>
+Date: Wed, 1 Feb 2017 14:34:31 -0500
+Subject: [PATCH 1/2] chromium src build fixes for non-NEON
+
+---
+ third_party/libwebp/BUILD.gn |  3 +--
+ third_party/opus/BUILD.gn    | 15 +++++++++++----
+ 2 files changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/third_party/libwebp/BUILD.gn b/third_party/libwebp/BUILD.gn
+index 5422447..9363df2 100644
+--- a/third_party/libwebp/BUILD.gn
++++ b/third_party/libwebp/BUILD.gn
+@@ -13,8 +13,7 @@ set_opt_level =
+     !is_debug && is_posix && (current_cpu == "arm" || current_cpu == "arm64")
+ 
+ use_dsp_neon =
+-    current_cpu == "arm64" || (current_cpu == "arm" && arm_version >= 7 &&
+-                               (arm_use_neon || arm_optionally_use_neon))
++    current_cpu == "arm64" || (current_cpu == "arm" && arm_version >= 7)
+ 
+ static_library("libwebp_dec") {
+   sources = [
+diff --git a/third_party/opus/BUILD.gn b/third_party/opus/BUILD.gn
+index 3bb5e0d..c374a20 100644
+--- a/third_party/opus/BUILD.gn
++++ b/third_party/opus/BUILD.gn
+@@ -371,12 +371,9 @@ static_library("opus") {
+         "src/celt/arm/arm_celt_map.c",
+         "src/celt/arm/armcpu.c",
+         "src/celt/arm/armcpu.h",
+-        "src/celt/arm/celt_neon_intr.c",
+         "src/celt/arm/fft_arm.h",
+         "src/celt/arm/mdct_arm.h",
+         "src/celt/arm/pitch_arm.h",
+-        "src/silk/arm/NSQ_neon.c",
+-        "src/silk/arm/NSQ_neon.h",
+         "src/silk/arm/arm_silk_map.c",
+       ]
+ 
+@@ -386,13 +383,23 @@ static_library("opus") {
+         "OPUS_ARM_MAY_HAVE_EDSP",
+         "OPUS_ARM_MAY_HAVE_MEDIA",
+         "OPUS_ARM_MAY_HAVE_NEON",
+-        "OPUS_ARM_MAY_HAVE_NEON_INTR",
+         "OPUS_HAVE_RTCD",
+       ]
+ 
+       deps = [
+         ":convert_rtcd_assembler",
+       ]
++
++      if (arm_use_neon) {
++        sources += [
++          "src/celt/arm/celt_neon_intr.c",
++          "src/silk/arm/NSQ_neon.c",
++          "src/silk/arm/NSQ_neon.h",
++        ]
++        defines += [
++          "OPUS_ARM_MAY_HAVE_NEON_INTR",
++        ]
++      }
+     }
+   }
+ }
+-- 
+2.7.4
+

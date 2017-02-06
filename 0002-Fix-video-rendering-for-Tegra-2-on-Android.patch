@@ -1,0 +1,27 @@
+From b1b6f5a4731c72183e119273e6244a4d3669304f Mon Sep 17 00:00:00 2001
+From: ryang <decatf@gmail.com>
+Date: Mon, 6 Feb 2017 12:20:58 -0500
+Subject: [PATCH 2/2] Fix video rendering for Tegra 2 on Android
+
+---
+ content/browser/android/content_startup_flags.cc | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/content/browser/android/content_startup_flags.cc b/content/browser/android/content_startup_flags.cc
+index b7bc16d..69d96df 100644
+--- a/content/browser/android/content_startup_flags.cc
++++ b/content/browser/android/content_startup_flags.cc
+@@ -77,6 +77,10 @@ void SetContentCommandLineFlags(bool single_process,
+     parsed_command_line->AppendSwitchASCII(
+         switches::kProfilerTiming, switches::kProfilerTimingDisabledValue);
+   }
++
++  // Fix video rendering for Tegra 2
++  parsed_command_line->AppendSwitch(switches::kEnableThreadedTextureMailboxes);
++  parsed_command_line->AppendSwitch(switches::kEnableGpuAsyncWorkerContext);
+ }
+ 
+ }  // namespace content
+-- 
+2.7.4
+
