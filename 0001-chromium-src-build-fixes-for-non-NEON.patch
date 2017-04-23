@@ -1,0 +1,26 @@
+From 24f363d11ace278c2b7bf859d211c0d4bd6b05ba Mon Sep 17 00:00:00 2001
+From: ryang <decatf@gmail.com>
+Date: Wed, 1 Feb 2017 14:34:31 -0500
+Subject: [PATCH 1/2] chromium src build fixes for non-NEON
+
+---
+ third_party/libwebp/BUILD.gn | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/third_party/libwebp/BUILD.gn b/third_party/libwebp/BUILD.gn
+index 5422447..9363df2 100644
+--- a/third_party/libwebp/BUILD.gn
++++ b/third_party/libwebp/BUILD.gn
+@@ -13,8 +13,7 @@ set_opt_level =
+     !is_debug && is_posix && (current_cpu == "arm" || current_cpu == "arm64")
+ 
+ use_dsp_neon =
+-    current_cpu == "arm64" || (current_cpu == "arm" && arm_version >= 7 &&
+-                               (arm_use_neon || arm_optionally_use_neon))
++    current_cpu == "arm64" || (current_cpu == "arm" && arm_version >= 7)
+ 
+ static_library("libwebp_dec") {
+   sources = [
+-- 
+2.7.4
+
