@@ -1,0 +1,59 @@
+From c0c663c48d1982f074e854ab81bac825e0fb1747 Mon Sep 17 00:00:00 2001
+From: ryang <decatf@gmail.com>
+Date: Mon, 15 May 2017 21:00:00 -0400
+Subject: [PATCH 2/3] Disable VP9 codec
+
+---
+ components/cdm/browser/cdm_message_filter_android.cc | 1 -
+ media/filters/stream_parser_factory.cc               | 3 +++
+ media/filters/vpx_video_decoder.cc                   | 4 ++++
+ 3 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/components/cdm/browser/cdm_message_filter_android.cc b/components/cdm/browser/cdm_message_filter_android.cc
+index 91e5f6c..86ffe87 100644
+--- a/components/cdm/browser/cdm_message_filter_android.cc
++++ b/components/cdm/browser/cdm_message_filter_android.cc
+@@ -38,7 +38,6 @@ struct CodecInfo {
+ 
+ const CodecInfo<media::VideoCodec> kVideoCodecsToQuery[] = {
+     {media::EME_CODEC_WEBM_VP8, media::kCodecVP8, "video/webm"},
+-    {media::EME_CODEC_WEBM_VP9, media::kCodecVP9, "video/webm"},
+ #if BUILDFLAG(USE_PROPRIETARY_CODECS)
+     {media::EME_CODEC_MP4_AVC1, media::kCodecH264, "video/mp4"},
+ #if BUILDFLAG(ENABLE_HEVC_DEMUXING)
+diff --git a/media/filters/stream_parser_factory.cc b/media/filters/stream_parser_factory.cc
+index a3df694..82e1869 100644
+--- a/media/filters/stream_parser_factory.cc
++++ b/media/filters/stream_parser_factory.cc
+@@ -384,6 +384,9 @@ static bool VerifyCodec(
+         return false;
+       }
+ #endif
++      if (codec_info->tag == CodecInfo::HISTOGRAM_VP9) {
++          return false;
++      }
+       if (video_codecs)
+         video_codecs->push_back(codec_info->tag);
+       return true;
+diff --git a/media/filters/vpx_video_decoder.cc b/media/filters/vpx_video_decoder.cc
+index 5af32c1..2e731a4 100644
+--- a/media/filters/vpx_video_decoder.cc
++++ b/media/filters/vpx_video_decoder.cc
+@@ -1,3 +1,4 @@
++
+ // Copyright (c) 2012 The Chromium Authors. All rights reserved.
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+@@ -582,6 +583,9 @@ bool VpxVideoDecoder::ConfigureDecoder(const VideoDecoderConfig& config) {
+   if (config.codec() != kCodecVP8 && config.codec() != kCodecVP9)
+     return false;
+ 
++  if (config.codec() == kCodecVP9)
++    return false;
++
+   // These are the combinations of codec-pixel format supported in principle.
+   DCHECK(
+       (config.codec() == kCodecVP8 && config.format() == PIXEL_FORMAT_YV12) ||
+-- 
+2.7.4
+
