@@ -1,0 +1,25 @@
+From 96226138228ea15b55f785f0fb5192471665ff9d Mon Sep 17 00:00:00 2001
+From: ryang <decatf@gmail.com>
+Date: Thu, 19 Apr 2018 10:11:31 -0400
+Subject: [PATCH 4/4] skia: Gaurd neon code with arm use neon flags
+
+---
+ skia/BUILD.gn | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/skia/BUILD.gn b/skia/BUILD.gn
+index 1d12fbf..21ef15a 100644
+--- a/skia/BUILD.gn
++++ b/skia/BUILD.gn
+@@ -281,7 +281,7 @@ component("skia") {
+       "ext/convolver_mips_dspr2.cc",
+       "ext/convolver_mips_dspr2.h",
+     ]
+-  } else if (current_cpu == "arm" || current_cpu == "arm64") {
++  } else if ((arm_use_neon || arm_optionally_use_neon) && (current_cpu == "arm" || current_cpu == "arm64")) {
+     sources += [
+       "ext/convolver_neon.cc",
+       "ext/convolver_neon.h",
+-- 
+2.7.4
+

@@ -1,0 +1,25 @@
+From 56fbfc8820feab51c7edbce667e9e8ab7dcbb823 Mon Sep 17 00:00:00 2001
+From: ryang <decatf@gmail.com>
+Date: Wed, 1 Feb 2017 15:03:48 -0500
+Subject: [PATCH 3/4] tegra2 and tegra3 have a 2k x 2k max texture size
+
+---
+ gpu/config/gpu_driver_bug_workarounds.cc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gpu/config/gpu_driver_bug_workarounds.cc b/gpu/config/gpu_driver_bug_workarounds.cc
+index 55aa4c5..44711b8 100644
+--- a/gpu/config/gpu_driver_bug_workarounds.cc
++++ b/gpu/config/gpu_driver_bug_workarounds.cc
+@@ -26,7 +26,7 @@ void IntSetToWorkarounds(const std::vector<int32_t>& enabled_workarounds,
+     }
+   }
+   if (workarounds->max_texture_size_limit_4096)
+-    workarounds->max_texture_size = 4096;
++    workarounds->max_texture_size = 2048;
+ 
+   if (workarounds->max_fragment_uniform_vectors_32)
+     workarounds->max_fragment_uniform_vectors = 32;
+-- 
+2.7.4
+
