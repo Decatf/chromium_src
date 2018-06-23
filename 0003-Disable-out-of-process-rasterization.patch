@@ -1,0 +1,48 @@
+From b959daf1fea9662c6969254dfaf76ce4a49b48d4 Mon Sep 17 00:00:00 2001
+From: ryang <decatf@gmail.com>
+Date: Fri, 7 Sep 2018 00:22:40 -0400
+Subject: [PATCH 3/3] Disable out of process rasterization
+
+---
+ content/browser/android/content_startup_flags.cc |  2 ++
+ gpu/config/software_rendering_list.json          | 11 +++++++++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/content/browser/android/content_startup_flags.cc b/content/browser/android/content_startup_flags.cc
+index f009fbe515b..b2139145898 100644
+--- a/content/browser/android/content_startup_flags.cc
++++ b/content/browser/android/content_startup_flags.cc
+@@ -61,6 +61,8 @@ void SetContentCommandLineFlags(bool single_process) {
+ 
+   // Fix video rendering for Tegra 2
+   parsed_command_line->AppendSwitch(switches::kEnableThreadedTextureMailboxes);
++
++  parsed_command_line->AppendSwitch(switches::kDisableOopRasterization);
+ }
+ 
+ }  // namespace content
+diff --git a/gpu/config/software_rendering_list.json b/gpu/config/software_rendering_list.json
+index fbae055a02a..0f1652d1e79 100644
+--- a/gpu/config/software_rendering_list.json
++++ b/gpu/config/software_rendering_list.json
+@@ -1670,6 +1670,17 @@
+       "features": [
+         "oop_rasterization"
+       ]
++    },
++    {
++      "id":157,
++      "description": "Out of process rasterization broken on Nvidia",
++      "os": {
++        "type": "android"
++      },
++      "gl_renderer": "NVIDIA.*",
++      "features": [
++        "oop_rasterization"
++      ]
+     }
+   ]
+ }
+-- 
+2.17.1
+
