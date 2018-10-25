@@ -1,0 +1,26 @@
+From 6db156d7a938337db50c7251b69370637dddce6f Mon Sep 17 00:00:00 2001
+From: ryang <decatf@gmail.com>
+Date: Thu, 25 Oct 2018 09:14:49 -0400
+Subject: [PATCH 3/4] thirdparty: libvpx: Fix arm-neon-cpu-detect
+
+---
+ third_party/libvpx/libvpx_srcs.gni | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/third_party/libvpx/libvpx_srcs.gni b/third_party/libvpx/libvpx_srcs.gni
+index 3bd17e20329..ab165bcc4ca 100644
+--- a/third_party/libvpx/libvpx_srcs.gni
++++ b/third_party/libvpx/libvpx_srcs.gni
+@@ -2141,6 +2141,9 @@ libvpx_srcs_arm_neon_cpu_detect_neon = [
+   "//third_party/libvpx/source/libvpx/vpx_dsp/arm/subtract_neon.c",
+   "//third_party/libvpx/source/libvpx/vpx_dsp/arm/sum_squares_neon.c",
+   "//third_party/libvpx/source/libvpx/vpx_dsp/arm/variance_neon.c",
++  "//third_party/libvpx/source/libvpx/vpx_dsp/arm/vpx_convolve8_neon.h",
++  "//third_party/libvpx/source/libvpx/vpx_dsp/arm/vpx_convolve8_neon_asm.c",
++  "//third_party/libvpx/source/libvpx/vpx_dsp/arm/vpx_convolve8_neon_asm.h",
+   "//third_party/libvpx/source/libvpx/vpx_dsp/arm/vpx_convolve_neon.c",
+   "//third_party/libvpx/source/libvpx/vpx_dsp/arm/vpx_scaled_convolve8_neon.c",
+ ]
+-- 
+2.17.1
+

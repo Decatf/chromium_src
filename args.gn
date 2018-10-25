@@ -1,0 +1,16 @@
+target_os = "android"
+is_component_build = false
+is_debug = false
+is_official_build = true
+is_chrome_branded = false
+use_official_google_api_keys = false
+# enable_resource_whitelist_generation = true
+ffmpeg_branding = "Chrome"
+proprietary_codecs = true
+enable_remoting = true
+arm_use_neon = false
+arm_optionally_use_neon = false
+is_clang = true
+android_default_version_name = "71.0.3578.83-20181205~decatf"
+arm_tune = "cortex-a9"
+safe_browsing_mode=2
