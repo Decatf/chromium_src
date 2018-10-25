@@ -1,0 +1,56 @@
+From c1e235bb4aaa5e12c2ef831eeaa182b243205da6 Mon Sep 17 00:00:00 2001
+From: Robert Yang <decatf@gmail.com>
+Date: Thu, 4 Apr 2019 19:46:52 -0400
+Subject: [PATCH 2/4] Disable VP9 codec
+
+---
+ components/cdm/browser/cdm_message_filter_android.cc | 3 ---
+ media/filters/stream_parser_factory.cc               | 3 +++
+ media/filters/vpx_video_decoder.cc                   | 3 +++
+ 3 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/components/cdm/browser/cdm_message_filter_android.cc b/components/cdm/browser/cdm_message_filter_android.cc
+index 5785ee4005b..dcfa0157c3e 100644
+--- a/components/cdm/browser/cdm_message_filter_android.cc
++++ b/components/cdm/browser/cdm_message_filter_android.cc
+@@ -38,9 +38,6 @@ struct CodecInfo {
+ 
+ const CodecInfo<media::VideoCodec> kVideoCodecsToQuery[] = {
+     {media::EME_CODEC_VP8, media::kCodecVP8, "video/webm"},
+-    // TODO(crbug.com/707127): Support query for VP9 profile 1/2/3 on Android.
+-    {media::EME_CODEC_VP9_PROFILE0, media::kCodecVP9, "video/webm"},
+-    {media::EME_CODEC_VP9_PROFILE0, media::kCodecVP9, "video/mp4"},
+ #if BUILDFLAG(USE_PROPRIETARY_CODECS)
+     {media::EME_CODEC_AVC1, media::kCodecH264, "video/mp4"},
+ #if BUILDFLAG(ENABLE_HEVC_DEMUXING)
+diff --git a/media/filters/stream_parser_factory.cc b/media/filters/stream_parser_factory.cc
+index a00e356231b..0b90346f0f9 100644
+--- a/media/filters/stream_parser_factory.cc
++++ b/media/filters/stream_parser_factory.cc
+@@ -414,6 +414,9 @@ static bool VerifyCodec(const CodecInfo* codec_info,
+       }
+ #endif
+ 
++      if (codec_info->tag == CodecInfo::HISTOGRAM_VP9)
++          return false;
++
+       if (video_codecs)
+         video_codecs->push_back(codec_info->tag);
+       return true;
+diff --git a/media/filters/vpx_video_decoder.cc b/media/filters/vpx_video_decoder.cc
+index 9c53fb4bcf3..8f96be44d9d 100644
+--- a/media/filters/vpx_video_decoder.cc
++++ b/media/filters/vpx_video_decoder.cc
+@@ -204,6 +204,9 @@ bool VpxVideoDecoder::ConfigureDecoder(const VideoDecoderConfig& config) {
+   if (config.codec() != kCodecVP8 && config.codec() != kCodecVP9)
+     return false;
+ 
++  if (config.codec() == kCodecVP9)
++    return false;
++
+   // These are the combinations of codec-pixel format supported in principle.
+   DCHECK(
+       (config.codec() == kCodecVP8 && config.format() == PIXEL_FORMAT_I420) ||
+-- 
+2.17.1
+
